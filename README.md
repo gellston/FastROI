@@ -63,7 +63,7 @@ for (auto vertical_line : vertical_lines) {
 
 #### DEMO
 <center>
-<img src="https://github.com/gellston/FastROI/blob/main/images/fastRect_rotation.gif?raw=true">
+<img src="https://github.com/gellston/FastROI/blob/main/images/fastRect_rotation.gif?raw=true" width=700>
 </center>
 
 
