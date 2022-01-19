@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <opencv2/opencv.hpp>
+#include <ctime>
+#include <chrono>
 
 #include "fastRect.h"
 
@@ -13,12 +15,18 @@ int main()
 
 	double angle = 0;
 	cv::Mat result(cv::Size(4000, 4000), CV_8UC3);
+	std::chrono::high_resolution_clock::time_point _start;
+
+	_start = std::chrono::high_resolution_clock::now();
+	int count = 0; 
 	while (true) {
-		
 		
 		result = cv::Scalar(0, 0, 0);
 
-		std::vector<std::vector<fast::calPoint>> vertical_lines = fast::rectROI(2000, 2000, angle, 1000, 1000, false, 40);
+		
+
+		std::vector<std::vector<fast::calPoint>> vertical_lines = fast::rectROI(2000, 2000, angle, 1000, 1000, false, 50);
+		
 		for (auto vertical_line : vertical_lines) {
 			for (auto calPoint : vertical_line) {
 				if (calPoint.x < 0 || calPoint.x >= 4000 || calPoint.y < 0 || calPoint.y >= 4000)
@@ -27,6 +35,7 @@ int main()
 				cv::circle(result, cv::Point((int)calPoint.x, (int)calPoint.y), 3, cv::Scalar(0, 255, 0), -1);
 			}
 		}
+
 
 		cv::imshow("result", result);
 		if (cv::waitKey(1) == 27)break;
