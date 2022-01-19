@@ -26,9 +26,9 @@ Performance
 How to use?
 =======================
 #### fastRect
-
-<img src="https://raw.githubusercontent.com/gellston/FastROI/main/images/fastRect.png" style="float:left">
-
+<center>
+<img src="https://raw.githubusercontent.com/gellston/FastROI/main/images/fastRect.png">
+</center>
 
 
 ```cpp
@@ -63,7 +63,7 @@ for (auto vertical_line : vertical_lines) {
 
 #### DEMO
 <center>
-
+<img src="https://github.com/gellston/FastROI/blob/main/images/fastRect_rotation.gif?raw=true">
 </center>
 
 
