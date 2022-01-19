@@ -27,9 +27,9 @@ How to use?
 =======================
 #### fastRect
 
-<center>
+<p align="center">
 <img src="https://raw.githubusercontent.com/gellston/FastROI/main/images/fastRect.png"  style="float:center">
-</center>
+</p>
 
 
 ```cpp
@@ -64,9 +64,9 @@ for (auto vertical_line : vertical_lines) {
 
 #### DEMO
 
-<center>
+<p align="center">
 <img src="https://github.com/gellston/FastROI/blob/main/images/fastRect_rotation.gif?raw=true" width=700 style="float:center">
-</center>
+</o>
 
 
 <div style="text-align: right; margin-right:30px;"> 
