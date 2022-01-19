@@ -27,7 +27,7 @@ How to use?
 =======================
 #### fastRect
 <center>
-<img src="https://raw.githubusercontent.com/gellston/FastROI/main/images/fastRect.png">
+<img src="https://raw.githubusercontent.com/gellston/FastROI/main/images/fastRect.png"  style="float:center">
 </center>
 
 
@@ -63,7 +63,7 @@ for (auto vertical_line : vertical_lines) {
 
 #### DEMO
 <center>
-<img src="https://github.com/gellston/FastROI/blob/main/images/fastRect_rotation.gif?raw=true" width=700>
+<img src="https://github.com/gellston/FastROI/blob/main/images/fastRect_rotation.gif?raw=true" width=700 style="float:center">
 </center>
 
 
