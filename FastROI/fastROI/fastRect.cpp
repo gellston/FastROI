@@ -5,10 +5,6 @@
 #include "fastRect.h"
 
 
-
-
-
-
 #include <Eigen/Core>
 #include <Eigen/Dense>
 
@@ -234,7 +230,6 @@ std::vector<std::vector<fast::calPoint>> fast::rectROI(int center_x, int center_
             __m256d start_result = _mm256_add_pd(chunk_mul, simd_vertical_xy);
             memcpy((((double*)start_vertical_xy_ptr) + index), &start_result, chunk_size);
         }
-
         combine_vertical_xy.push_back(vertical_xy);
     }
 
