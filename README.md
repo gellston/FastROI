@@ -106,7 +106,7 @@ for (auto vertical_line : vertical_lines) {
 #### DEMO
 <center>
 
-<img src="https://github.com/gellston/FastROI/blob/main/images/fastDonut_demo.png?raw=true" width=450>
+<img src="https://github.com/gellston/FastROI/blob/main/images/fast_donut_demo.gif?raw=true" width=450>
 
 </center>
 
