@@ -35,29 +35,34 @@ How to use?
 ```cpp
 #include <fastRect.h>
 
-int centerX = 2000;     // rect center y
-int centerY = 2000;     // rect center y
-double angle = 40;      // rotation angle
-int range = 1000;       // same as width
-int distance = 1000;    // same as height 
-bool search_direction = false //search direction (false : foward direction, true : backward direction)
-int searching gap = 10;   //gap pixels
+int main()
+{
 
-std::vector<std::vector<fast::calPoint>> result = fast::rectROI(centerX, centerY, angle, range, distance, false, skip_pixels);
+    int centerX = 2000;     // rect center y
+    int centerY = 2000;     // rect center y
+    double angle = 40;      // rotation angle
+    int range = 1000;       // same as width
+    int distance = 1000;    // same as height 
+    bool search_direction = false; //search direction (false : foward direction, true : backward direction)
+    int skip_pixels = 10;   //gap pixels
 
-//iteration of vertical line
-for (auto vertical_line : vertical_lines) {
+    std::vector<std::vector<fast::calPoint>> result = fast::rectROI(centerX, centerY, angle, range, distance, false, skip_pixels);
 
-    //iteration of point in vertical line
-    for (auto calPoint : vertical_line) {
-    
-        //Check current position is in image
-        if (calPoint.x < 0 || calPoint.x >= 4000 || calPoint.y < 0 || calPoint.y >= 4000)
-            continue;
-    
-        //Do whatever you want here
-        
+    //iteration of vertical line
+    for (auto vertical_line : result) {
+
+        //iteration of point in vertical line
+        for (auto calPoint : vertical_line) {
+
+            //Check current position is in image
+            if (calPoint.x < 0 || calPoint.x >= 4000 || calPoint.y < 0 || calPoint.y >= 4000)
+                continue;
+
+            //Do whatever you want here
+        }
     }
+
+    return 0;
 }
 		
 ```
