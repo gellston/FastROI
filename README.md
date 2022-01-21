@@ -1,4 +1,4 @@
-Fast ROI
+Fast ROI v1.1
 =======================
 The FAST ROI library is useful for quickly extracting the coordinates of a rotating rectangular ROI and donut ROI
 
