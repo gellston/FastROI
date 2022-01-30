@@ -15,6 +15,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConsoleApplication2", "Cons
 		{8F4B183C-08FD-43B7-ADD3-98F7D7635DA0} = {8F4B183C-08FD-43B7-ADD3-98F7D7635DA0}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConsoleApplication3", "ConsoleApplication3\ConsoleApplication3.vcxproj", "{CACAC41A-1E58-4A16-B5FF-01EC8A9373D3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8F4B183C-08FD-43B7-ADD3-98F7D7635DA0} = {8F4B183C-08FD-43B7-ADD3-98F7D7635DA0}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -47,6 +52,14 @@ Global
 		{5E63E966-9B2E-4BB0-90D8-8B3E9BB9FDB9}.Release|x64.Build.0 = Release|x64
 		{5E63E966-9B2E-4BB0-90D8-8B3E9BB9FDB9}.Release|x86.ActiveCfg = Release|Win32
 		{5E63E966-9B2E-4BB0-90D8-8B3E9BB9FDB9}.Release|x86.Build.0 = Release|Win32
+		{CACAC41A-1E58-4A16-B5FF-01EC8A9373D3}.Debug|x64.ActiveCfg = Debug|x64
+		{CACAC41A-1E58-4A16-B5FF-01EC8A9373D3}.Debug|x64.Build.0 = Debug|x64
+		{CACAC41A-1E58-4A16-B5FF-01EC8A9373D3}.Debug|x86.ActiveCfg = Debug|Win32
+		{CACAC41A-1E58-4A16-B5FF-01EC8A9373D3}.Debug|x86.Build.0 = Debug|Win32
+		{CACAC41A-1E58-4A16-B5FF-01EC8A9373D3}.Release|x64.ActiveCfg = Release|x64
+		{CACAC41A-1E58-4A16-B5FF-01EC8A9373D3}.Release|x64.Build.0 = Release|x64
+		{CACAC41A-1E58-4A16-B5FF-01EC8A9373D3}.Release|x86.ActiveCfg = Release|Win32
+		{CACAC41A-1E58-4A16-B5FF-01EC8A9373D3}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
