@@ -26,11 +26,10 @@ namespace fast {
 
 		void compute(unsigned char * buffer, int width, int height);
 		std::vector<fast::blobInfo> blobInfo();
-		std::vector<fast::blobInfo> rectFilter(int minWidth, int maxWidth, int minHeight, int maxHeight);
-		
 
-		
 
+		static std::vector<fast::blobInfo> rectFilter(std::vector<fast::blobInfo> blobInfo, int minWidth, int maxWidth, int minHeight, int maxHeight);
+		static void blobFill(unsigned char* buffer, int width, int height , unsigned char pixel, fast::blobInfo info);
 	};
 }
 

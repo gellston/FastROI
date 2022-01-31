@@ -206,12 +206,12 @@ namespace fast {
 						
 						if (min_x > point.col)
 							min_x = point.col;
-						else if (max_x <= point.col)
+						if (max_x < point.col)
 							max_x = point.col;
 
 						if (min_y > point.row)
 							min_y = point.row;
-						else if (max_y <= point.row)
+						if (max_y < point.row)
 							max_y = point.row;
 
 						centeroid_x += ((double)point.col / count);
@@ -221,8 +221,8 @@ namespace fast {
 						calPoint.y = point.row;
 						features.push_back(calPoint);
 					}
-					int width = max_x - min_x;
-					int height = max_y - min_y;
+					int width = max_x - min_x + 1;
+					int height = max_y - min_y + 1;
 
 				
 					
@@ -505,117 +505,106 @@ void fast::fastBlob::blobFill(unsigned char* buffer, int width, int height, unsi
 		HVERROR(error, "Invalid blob info");
 	}
 
-	int start_y = info.rectY();
-	int end_Y = info.rectHeight() + info.rectY();
+	int size = info.rectHeight() * info.rectWidth();
+
+	int blobWidth = info.rectWidth();
+	int blobHeight = info.rectHeight();
+	int blobStartX = info.rectX();
+	int blobStartY = info.rectY();
+
+	std::shared_ptr<unsigned char []> marker(new unsigned char[size], [](unsigned char* ptr) {
+		delete[] ptr;
+	});
+	std::memset(marker.get(), 0, sizeof(unsigned char) * size);
+	auto marker_buffer = marker.get();
 
 
-
-	//first line drawing and temp_top fill
-	std::vector<fast::calPoint> temp_top;
-	for (auto& element : points) {
-		if (element.y == start_y) {
-			temp_top.push_back(element);
-			buffer[(int)element.y * width + (int)element.x] = pixel;
-		}
-			
+	for (auto& point : points) {
+		int x = (int)point.x - blobStartX;
+		int y = (int)point.y - blobStartY;
+		marker_buffer[y * blobWidth + x] = 255;
 	}
-	//first line drawing and temp_top fill
 
 
-	
-	for (int row = start_y+1; row < end_Y + 1; row++) {
+	std::deque<fast::calPoint> stack;
+	for (int x = 0; x < blobWidth; x++) {
+		fast::calPoint point1;
+		fast::calPoint point2;
 
-		std::deque<fast::calPoint> columns;
-		for (auto& element : points) {
-			if (element.y == row)
-				columns.push_back(element);
-		}
-		
-		
-		
-		
-		if (columns.size() == 0) continue;
+		point1.x = x;
+		point1.y = blobHeight - 1;
 
+		point2.x = x;
+		point2.y = 0;
 
-		
-		
-		
-		std::sort(columns.begin(), columns.end(), [&](fast::calPoint & first, fast::calPoint& second) {
-			return first.x < second.x;
-		});
+		stack.push_back(point1);
+		stack.push_back(point2);
+	}
 
-		
-		
-		
-		
-		std::vector<fast::calPoint> current_top = temp_top;
-		temp_top.clear();
+	for (int y = 0; y < blobHeight; y++) {
+		fast::calPoint point1;
+		fast::calPoint point2;
 
-		
-		
-		
-		
-		std::deque<fast::calPoint> active_columns;
-		while (!columns.empty()) {
-			auto current_element = columns.front();
-			columns.pop_front();
+		point1.x = blobWidth - 1;
+		point1.y = y;
 
-			//std::cout << "current x :" << current_element.x << std::endl;
-			//std::cout << "current y :" << current_element.y << std::endl;
+		point2.x = 0;
+		point2.y = y;
 
-			int start_dy = current_element.y - 1;
-			int end_dy = current_element.y + 1;
-			int start_dx = current_element.x - 1;
-			int end_dx = current_element.x + 1;
+		stack.push_back(point1);
+		stack.push_back(point2);
+	}
 
+	while (!stack.empty()) {
 
-			bool found = false;
-			for (auto& top_element : current_top) {
-				for (int dy = start_dy; dy <= end_dy && found == false; dy++) {
-					for (int dx = start_dx; dx<= end_dx && found == false; dx++) {
-					
+		auto current_position = stack.back();
+		stack.pop_back();
 
-						//std::cout << "dx :" << dx << std::endl;
-						//std::cout << "dy :" << dy << std::endl;
+		int current_index = (int)current_position.y * blobWidth + (int)current_position.x;
 
-						if (top_element.x == dx && top_element.y == dy)
-							found = true;
-					}
-				}
-			}
-
-			if (found) {
-				active_columns.push_back(current_element);
-			}
-			else {
-				buffer[(int)current_element.y * width + (int)current_element.x] = pixel;
-			}
-			temp_top.push_back(current_element);
-		}
-
-		//std::cout << "active line check done" << std::endl;
-
-		if (active_columns.size() == 0) {
-			//std::cout << "something wrong!!!" << std::endl;
-			//std::cout << "current size = " << active_columns.size() << std::endl;
+		if (marker_buffer[current_index] != 0)
 			continue;
+
+		marker_buffer[current_index] = 1;
+
+		if (current_position.x - 1 >= 0) {
+			fast::calPoint temp;
+			temp.x = current_position.x - 1;
+			temp.y = current_position.y;
+			stack.push_back(temp);
 		}
 
-		//std::cout << "drawing start" << std::endl;
-		//std::cout << "current active line count = " << active_columns.size() << std::endl;
+		if (current_position.x + 1 < blobWidth) {
+			fast::calPoint temp;
+			temp.x = current_position.x + 1;
+			temp.y = current_position.y;
+			stack.push_back(temp);
+		}
 
-		std::sort(active_columns.begin(), active_columns.end(), [&](fast::calPoint& first, fast::calPoint& second) {
-			return first.x < second.x;
-		});
+		if (current_position.y - 1 >= 0) {
+			fast::calPoint temp;
+			temp.x = current_position.x;
+			temp.y = current_position.y - 1;
+			stack.push_back(temp);
+		}
 
-
-		fast::calPoint first_element = active_columns.front();
-		fast::calPoint second_element = active_columns.back();
-		for (int x = first_element.x; x <= second_element.x; x++)
-			buffer[(int)row * width + (int)x] = pixel;
-
-
+		if (current_position.y + 1 < blobHeight) {
+			fast::calPoint temp;
+			temp.x = current_position.x;
+			temp.y = current_position.y + 1;
+			stack.push_back(temp);
+		}
 	}
 
+	for (int y = 0; y < blobHeight; y++) {
+		for (int x = 0; x < blobWidth; x++) {
+			int marker_index = blobWidth * y + x;
+
+			int buffer_index = width * (y + blobStartY) + (x + blobStartX);
+			if (marker_buffer[marker_index] == 0 || marker_buffer[marker_index] == 255)
+				buffer[buffer_index] = pixel;
+
+		}
+	}
 
 }

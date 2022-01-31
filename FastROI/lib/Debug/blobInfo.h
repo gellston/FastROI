@@ -54,6 +54,11 @@ namespace fast {
         void setBlobPoints(std::vector<fast::calPoint>& points) {
             this->_blob_points = points;
         }
+
+        std::vector<fast::calPoint> getBlobPoints() {
+            return this->_blob_points;
+        }
+
     };
 }
 
