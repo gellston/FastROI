@@ -6,6 +6,10 @@
 
 #include <string>
 #include <algorithm>
+#include <iterator>
+#include <deque>
+#include <iostream>
+
 
 namespace fast {
 	enum border_type {
@@ -82,6 +86,15 @@ namespace fast {
 		}
 
 		void compute(unsigned char * buffer, int width, int height) {
+
+			if (buffer == nullptr) {
+				HVERROR(error, "Invalid image buffer");
+			}
+
+			if (width <= 0 || height <= 0) {
+				HVERROR(error, "Invalid image size");
+			}
+
 			try {
 				int rows = height;
 				int cols = width;
@@ -449,13 +462,16 @@ std::vector<fast::blobInfo> fast::fastBlob::blobInfo() {
 }
 
 void fast::fastBlob::compute(unsigned char * buffer ,int width, int height) {
-	this->impl->compute(buffer, width, height);
+	try {
+		this->impl->compute(buffer, width, height);
+	}
+	catch (std::exception e) {
+		throw e;
+	}
 }
 
 
-std::vector<fast::blobInfo> fast::fastBlob::rectFilter(int minWidth, int maxWidth, int minHeight, int maxHeight) {
-
-	auto blobInfo = this->impl->blobInfo();
+std::vector<fast::blobInfo> fast::fastBlob::rectFilter(std::vector<fast::blobInfo> blobInfo, int minWidth, int maxWidth, int minHeight, int maxHeight) {
 
 	std::vector<fast::blobInfo> result;
 
@@ -466,4 +482,140 @@ std::vector<fast::blobInfo> fast::fastBlob::rectFilter(int minWidth, int maxWidt
 
 	return result;
 	
+}
+
+
+void fast::fastBlob::blobFill(unsigned char* buffer, int width, int height, unsigned char pixel, fast::blobInfo info) {
+	
+	auto points = info.getBlobPoints();
+
+	if (buffer == nullptr) {
+		HVERROR(error, "Invalid image buffer");
+	}
+
+	if (width <= 0 || height <= 0) {
+		HVERROR(error, "Invalid image size");
+	}
+
+	if (info.rectX() < 0 || info.rectX() > width || info.rectY() < 0 || info.rectY() > height) {
+		HVERROR(error, "Invalid blob info");
+	}
+
+	if (info.rectWidth() + info.rectX() > width ||  info.rectHeight() + info.rectY() > height) {
+		HVERROR(error, "Invalid blob info");
+	}
+
+	int start_y = info.rectY();
+	int end_Y = info.rectHeight() + info.rectY();
+
+
+
+	//first line drawing and temp_top fill
+	std::vector<fast::calPoint> temp_top;
+	for (auto& element : points) {
+		if (element.y == start_y) {
+			temp_top.push_back(element);
+			buffer[(int)element.y * width + (int)element.x] = pixel;
+		}
+			
+	}
+	//first line drawing and temp_top fill
+
+
+	
+	for (int row = start_y+1; row < end_Y + 1; row++) {
+
+		std::deque<fast::calPoint> columns;
+		for (auto& element : points) {
+			if (element.y == row)
+				columns.push_back(element);
+		}
+		
+		
+		
+		
+		if (columns.size() == 0) continue;
+
+
+		
+		
+		
+		std::sort(columns.begin(), columns.end(), [&](fast::calPoint & first, fast::calPoint& second) {
+			return first.x < second.x;
+		});
+
+		
+		
+		
+		
+		std::vector<fast::calPoint> current_top = temp_top;
+		temp_top.clear();
+
+		
+		
+		
+		
+		std::deque<fast::calPoint> active_columns;
+		while (!columns.empty()) {
+			auto current_element = columns.front();
+			columns.pop_front();
+
+			//std::cout << "current x :" << current_element.x << std::endl;
+			//std::cout << "current y :" << current_element.y << std::endl;
+
+			int start_dy = current_element.y - 1;
+			int end_dy = current_element.y + 1;
+			int start_dx = current_element.x - 1;
+			int end_dx = current_element.x + 1;
+
+
+			bool found = false;
+			for (auto& top_element : current_top) {
+				for (int dy = start_dy; dy <= end_dy && found == false; dy++) {
+					for (int dx = start_dx; dx<= end_dx && found == false; dx++) {
+					
+
+						//std::cout << "dx :" << dx << std::endl;
+						//std::cout << "dy :" << dy << std::endl;
+
+						if (top_element.x == dx && top_element.y == dy)
+							found = true;
+					}
+				}
+			}
+
+			if (found) {
+				active_columns.push_back(current_element);
+			}
+			else {
+				buffer[(int)current_element.y * width + (int)current_element.x] = pixel;
+			}
+			temp_top.push_back(current_element);
+		}
+
+		//std::cout << "active line check done" << std::endl;
+
+		if (active_columns.size() == 0) {
+			//std::cout << "something wrong!!!" << std::endl;
+			//std::cout << "current size = " << active_columns.size() << std::endl;
+			continue;
+		}
+
+		//std::cout << "drawing start" << std::endl;
+		//std::cout << "current active line count = " << active_columns.size() << std::endl;
+
+		std::sort(active_columns.begin(), active_columns.end(), [&](fast::calPoint& first, fast::calPoint& second) {
+			return first.x < second.x;
+		});
+
+
+		fast::calPoint first_element = active_columns.front();
+		fast::calPoint second_element = active_columns.back();
+		for (int x = first_element.x; x <= second_element.x; x++)
+			buffer[(int)row * width + (int)x] = pixel;
+
+
+	}
+
+
 }
