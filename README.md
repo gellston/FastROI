@@ -1,4 +1,4 @@
-Fast ROI v1.2
+Fast ROI v1.3
 =======================
 The FAST ROI library is useful for quickly extracting the coordinates of a rotating rectangular ROI and donut ROI
 also it support blob detection;
@@ -35,6 +35,7 @@ Performance
 |Name|fps|
 |------|---|
 |fast::fastBlob ***(video 1920x1080)***|15~20ms elapse time|
+|fast::fastBlob(blobFill) ***(video 1920x1080)***|Unknown|
 
 How to use?
 =======================
@@ -169,7 +170,9 @@ int main()
 <center>
 
 <img src="https://github.com/gellston/FastROI/blob/main/images/fastBlob.gif?raw=true" >
-
+<p>Blob box detection example</p>
+<img src="https://github.com/gellston/FastROI/blob/main/images/blobFilter.gif?raw=true" >
+<p>Blob filter example (fast::fastBlob::blobFill)</p>
 </center>
 
 
